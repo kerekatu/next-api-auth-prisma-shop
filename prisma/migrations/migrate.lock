@@ -1,0 +1,7 @@
+# Prisma Migrate lockfile v1
+
+20201117102545-product-model
+20201117112536-category-model-relation-to-product
+20201117122332-unique-category-title
+20201117122825-fixed-category-property-on-product
+20201118090921-user-model-enum-role
