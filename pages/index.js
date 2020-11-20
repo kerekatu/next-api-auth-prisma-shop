@@ -6,9 +6,18 @@ const HomePage = ({ user }) => {
   return (
     <div>
       {user?.isLoggedIn ? (
-        <Link href="/logout">
+        <button
+          onClick={async () => {
+            const response = await fetch('/api/auth/logout')
+
+            console.log(response)
+            if (response.ok) {
+              alert('you are logged out')
+            }
+          }}
+        >
           <a>Logout</a>
-        </Link>
+        </button>
       ) : (
         <Link href="/login">
           <a>Login</a>
