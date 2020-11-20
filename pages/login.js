@@ -3,26 +3,13 @@ import { useEffect } from 'react'
 import { withAuthServerSideProps } from '../lib/withSession'
 import { userSchema } from '../lib/yupSchema'
 import useForm from '../hooks/useForm'
-
-const handleLogIn = async (data, router) => {
-  const response = await fetch('/api/auth/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-
-  if (response.ok) {
-    router.replace('/')
-  }
-}
+import { handleLogin } from '../lib/api'
 
 const LoginPage = ({ user }) => {
   const router = useRouter()
   const initialFormValues = { username: '', password: '' }
   const { formErrors, handleChange, handleSubmit, formValues } = useForm(
-    handleLogIn,
+    handleLogin,
     initialFormValues,
     userSchema
   )
@@ -36,6 +23,9 @@ const LoginPage = ({ user }) => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
+        {formErrors?.errors?.responseError && (
+          <div>{formErrors.errors.responseError}</div>
+        )}
         <div>
           <label htmlFor="loginUsernameInput">Username</label>
           <input

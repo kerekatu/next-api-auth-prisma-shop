@@ -46,10 +46,12 @@ handler.post(async (req, res) => {
     } else {
       userSchema
         .validate({ username: body.username, password: body.password })
-        .catch((error) => res.status(400).send({ success: false, error }))
+        .catch((error) => res.status(400).json({ success: false, error }))
     }
   } catch (error) {
-    res.status(400).send({ success: false, error })
+    res
+      .status(400)
+      .json({ success: false, error, message: 'wrong username or password' })
   }
 })
 

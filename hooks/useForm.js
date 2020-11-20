@@ -9,7 +9,16 @@ const useForm = (callback, initialValues = {}, validationSchema) => {
   useEffect(() => {
     if (!formErrors.isValid) return
 
-    callback(formValues, router)
+    callback(formValues).then((response) => {
+      if (!response.success) {
+        return setFormErrors({
+          errors: { responseError: response?.message },
+          isValid: false
+        })
+      }
+
+      router.replace('/')
+    })
   }, [callback, formErrors, formValues, router])
 
   const validateForm = async () => {

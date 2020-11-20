@@ -1,21 +1,16 @@
 import { withAuthServerSideProps } from '../lib/withSession'
 import Link from 'next/Link'
+import { handleLogout } from '../lib/api'
+import { useRouter } from 'next/router'
 
 const HomePage = ({ user }) => {
+  const router = useRouter()
   console.log(user)
+
   return (
     <div>
       {user?.isLoggedIn ? (
-        <button
-          onClick={async () => {
-            const response = await fetch('/api/auth/logout')
-
-            console.log(response)
-            if (response.ok) {
-              alert('you are logged out')
-            }
-          }}
-        >
+        <button onClick={() => handleLogout(() => router.replace('/'))}>
           <a>Logout</a>
         </button>
       ) : (
