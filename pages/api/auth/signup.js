@@ -33,7 +33,7 @@ handler.post(async (req, res) => {
           password: passwordHash
         }
       })
-      session.set('user', { isLoggedIn: true, username: body.username })
+      session.set('user', { isLoggedIn: true, username: body.username, role: 'USER' })
       await session.save()
       res.status(200).json({
         success: true,

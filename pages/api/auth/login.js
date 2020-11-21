@@ -36,7 +36,7 @@ handler.post(async (req, res) => {
           .json({ success: false, message: 'password does not match' })
       }
 
-      session.set('user', { isLoggedIn: true, username: body.username })
+      session.set('user', { isLoggedIn: true, username: body.username, role: existingUser.role })
       await session.save()
       res.status(200).json({
         success: true,

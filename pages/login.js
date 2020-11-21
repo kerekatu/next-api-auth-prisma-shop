@@ -4,6 +4,9 @@ import { withAuthServerSideProps } from '../lib/withSession'
 import { userSchema } from '../lib/yupSchema'
 import useForm from '../hooks/useForm'
 import { handleLogin } from '../lib/api'
+import styled from '@emotion/styled'
+import Form from '@/components/common/form'
+import FormField from '@/components/common/form/form-field'
 
 const LoginPage = ({ user }) => {
   const router = useRouter()
@@ -21,42 +24,34 @@ const LoginPage = ({ user }) => {
   }, [router, user])
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        {formErrors?.errors?.responseError && (
-          <div>{formErrors.errors.responseError}</div>
-        )}
-        <div>
-          <label htmlFor="loginUsernameInput">Username</label>
-          <input
-            type="text"
-            id="loginUsernameInput"
-            name="username"
-            value={formValues.username}
-            onChange={(e) => handleChange(e)}
-          />
-          {formErrors?.errors?.username && (
-            <div>{formErrors.errors.username}</div>
-          )}
-        </div>
-        <div>
-          <label htmlFor="loginPasswordInput">Password</label>
-          <input
-            type="password"
-            id="loginPasswordInput"
-            name="password"
-            value={formValues.password}
-            onChange={(e) => handleChange(e)}
-          />
-          {formErrors?.errors?.password && (
-            <div>{formErrors.errors.password}</div>
-          )}
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <LoginWrapper>
+      <Form
+        submitText="Login"
+        cancelButton={{ text: 'Go Back', callback: () => router.replace('/') }}
+        error={formErrors?.errors?.responseError}
+        onSubmit={handleSubmit}
+      >
+        <FormField
+          label="Username"
+          name="username"
+          value={formValues.username}
+          error={formErrors?.errors?.username}
+          onChange={handleChange}
+        />
+        <FormField
+          type="password"
+          label="Password"
+          name="password"
+          value={formValues.password}
+          error={formErrors?.errors?.password}
+          onChange={handleChange}
+        />
+      </Form>
+    </LoginWrapper>
   )
 }
+
+const LoginWrapper = styled.main``
 
 export const getServerSideProps = withAuthServerSideProps()
 

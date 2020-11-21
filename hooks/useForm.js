@@ -13,7 +13,7 @@ const useForm = (callback, initialValues = {}, validationSchema) => {
       if (!response.success) {
         return setFormErrors({
           errors: { responseError: response?.message },
-          isValid: false
+          isValid: false,
         })
       }
 
@@ -42,8 +42,7 @@ const useForm = (callback, initialValues = {}, validationSchema) => {
     setFormValues({ ...formValues, [name]: value })
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = () => {
     validateForm()
   }
 
@@ -51,7 +50,7 @@ const useForm = (callback, initialValues = {}, validationSchema) => {
     formErrors,
     handleChange,
     handleSubmit,
-    formValues
+    formValues,
   }
 }
 
