@@ -1,8 +1,9 @@
 import Button from '@/components/common/button'
+import styled from '@emotion/styled'
 
 const Form = ({ onSubmit, submitText, error, cancelButton, children }) => {
   return (
-    <form
+    <FormWrapper
       onSubmit={(e) => {
         e.preventDefault()
         onSubmit()
@@ -20,8 +21,18 @@ const Form = ({ onSubmit, submitText, error, cancelButton, children }) => {
           </Button>
         )}
       </div>
-    </form>
+    </FormWrapper>
   )
 }
+
+const FormWrapper = styled.form`
+  width: 100%;
+
+  .form-submit {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+`
 
 export default Form

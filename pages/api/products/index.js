@@ -2,7 +2,7 @@ import multer from 'multer'
 import { PrismaClient } from '@prisma/client'
 import nc from 'next-connect'
 import cors from 'cors'
-import withSession from '../../../lib/withSession'
+import withSession from '@/lib/withSession'
 
 const prisma = new PrismaClient()
 const handler = nc().use(cors())
@@ -14,8 +14,8 @@ const uploadImage = multer({
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname)
-    }
-  })
+    },
+  }),
 })
 
 handler.get(async (req, res) => {
@@ -24,14 +24,14 @@ handler.get(async (req, res) => {
   try {
     if (query?.search) {
       const searchProducts = await prisma.product.findMany({
-        where: { title: { contains: query.search, mode: 'insensitive' } }
+        where: { title: { contains: query.search, mode: 'insensitive' } },
       })
 
       return res.status(200).json(searchProducts)
     }
 
     const products = await prisma.product.findMany({
-      include: { category: true }
+      include: { category: true },
     })
 
     res.status(200).json(products)
@@ -51,10 +51,10 @@ handler.use(uploadImage.single('image')).post(async (req, res) => {
         image: file.filename,
         category: {
           connect: {
-            title: body.category
-          }
-        }
-      }
+            title: body.category,
+          },
+        },
+      },
     })
 
     res.status(200).json(product)
@@ -65,8 +65,8 @@ handler.use(uploadImage.single('image')).post(async (req, res) => {
 
 export const config = {
   api: {
-    bodyParser: false
-  }
+    bodyParser: false,
+  },
 }
 
 export default withSession(handler)

@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import nc from 'next-connect'
 import cors from 'cors'
-import withSession from '../../../lib/withSession'
-import { userSchema } from '../../../lib/yupSchema'
+import withSession from '@/lib/withSession'
+import { userSchema } from '@/lib/yupSchema'
 import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
@@ -12,13 +12,13 @@ handler.post(async (req, res) => {
   const { body, session } = req
   const isValid = userSchema.isValid({
     username: body.username,
-    password: body.password
+    password: body.password,
   })
 
   try {
     if (isValid) {
       const existingUser = await prisma.user.findOne({
-        where: { username: body.username }
+        where: { username: body.username },
       })
       if (existingUser) {
         return res
@@ -30,15 +30,19 @@ handler.post(async (req, res) => {
       await prisma.user.create({
         data: {
           username: body.username,
-          password: passwordHash
-        }
+          password: passwordHash,
+        },
       })
-      session.set('user', { isLoggedIn: true, username: body.username, role: 'USER' })
+      session.set('user', {
+        isLoggedIn: true,
+        username: body.username,
+        role: 'USER',
+      })
       await session.save()
       res.status(200).json({
         success: true,
         isLoggedIn: true,
-        message: 'you have successfully signed up'
+        message: 'you have successfully signed up',
       })
     } else {
       userSchema

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import nc from 'next-connect'
 import cors from 'cors'
-import withSession from '../../../lib/withSession'
+import withSession from '@/lib/withSession'
 
 const prisma = new PrismaClient()
 const handler = nc().use(cors())
@@ -12,7 +12,7 @@ handler.get(async (req, res) => {
 
     if (user) {
       const userDetails = await prisma.user.findOne({
-        where: { username: user.username }
+        where: { username: user.username },
       })
       delete userDetails.password
 

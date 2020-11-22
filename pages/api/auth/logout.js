@@ -1,4 +1,4 @@
-import withSession from '../../../lib/withSession'
+import withSession from '@/lib/withSession'
 
 export default withSession(async (req, res) => {
   try {
