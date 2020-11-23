@@ -2,6 +2,7 @@ import multer from 'multer'
 import { PrismaClient } from '@prisma/client'
 import nc from 'next-connect'
 import cors from 'cors'
+import withSession, { withAuth } from '@/lib/withSession'
 
 const prisma = new PrismaClient()
 const handler = nc().use(cors())
@@ -50,4 +51,6 @@ export const config = {
   }
 }
 
-export default handler
+export default withSession(
+  withAuth(handler, { isProtected: true, roles: ['ADMIN'] })
+)

@@ -6,7 +6,7 @@ const AdminPage = () => {
 
 export const getServerSideProps = withAuthServerSideProps({
   isProtected: true,
-  roles: ['ADMIN'],
+  roles: ['ADMIN']
 })
 
 export default AdminPage

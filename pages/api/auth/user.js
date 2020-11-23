@@ -12,7 +12,7 @@ handler.get(async (req, res) => {
 
     if (user) {
       const userDetails = await prisma.user.findOne({
-        where: { username: user.username },
+        where: { username: user.username }
       })
       delete userDetails.password
 

@@ -4,6 +4,7 @@ import nc from 'next-connect'
 import cors from 'cors'
 import fs from 'fs'
 import { CONSTANTS } from '@/lib/constants'
+import withSession, { withAuth } from '@/lib/withSession'
 
 const prisma = new PrismaClient()
 const handler = nc().use(cors())
@@ -15,15 +16,15 @@ const uploadImage = multer({
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname)
-    },
-  }),
+    }
+  })
 })
 
 handler.get(async (req, res) => {
   try {
     const category = await prisma.category.findOne({
       where: { id: +req.query.id },
-      include: { products: true },
+      include: { products: true }
     })
 
     res.status(200).json({ success: true, category })
@@ -40,8 +41,8 @@ handler.use(uploadImage.single('image')).put(async (req, res) => {
       where: { id: +query.id },
       data: {
         title: body.title,
-        image: file.filename,
-      },
+        image: file.filename
+      }
     })
 
     res.status(200).json({ success: true, category })
@@ -68,7 +69,7 @@ handler.delete(async (req, res) => {
     }
 
     const deletedCategory = await prisma.category.delete({
-      where: { id: +query.id },
+      where: { id: +query.id }
     })
     res.status(200).json({ success: true, deletedCategory })
   } catch (error) {
@@ -78,8 +79,10 @@ handler.delete(async (req, res) => {
 
 export const config = {
   api: {
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 }
 
-export default handler
+export default withSession(
+  withAuth(handler, { isProtected: true, roles: ['ADMIN'] })
+)

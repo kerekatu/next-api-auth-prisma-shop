@@ -5,7 +5,6 @@ import { withAuthServerSideProps } from '@/lib/withSession'
 
 const HomePage = ({ user }) => {
   const router = useRouter()
-  console.log(user)
 
   return (
     <div>

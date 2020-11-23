@@ -4,6 +4,7 @@ import nc from 'next-connect'
 import cors from 'cors'
 import fs from 'fs'
 import { CONSTANTS } from '@/lib/constants'
+import withSession, { withAuth } from '@/lib/withSession'
 
 const prisma = new PrismaClient()
 const handler = nc().use(cors())
@@ -15,14 +16,14 @@ const uploadImage = multer({
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname)
-    },
-  }),
+    }
+  })
 })
 
 handler.get(async (req, res) => {
   try {
     const product = await prisma.product.findOne({
-      where: { id: +req.query.id },
+      where: { id: +req.query.id }
     })
 
     res.status(200).json(product)
@@ -43,10 +44,10 @@ handler.use(uploadImage.single('image')).put(async (req, res) => {
         image: file.filename,
         category: {
           connect: {
-            title: body.category,
-          },
-        },
-      },
+            title: body.category
+          }
+        }
+      }
     })
 
     res.status(200).json(product)
@@ -73,7 +74,7 @@ handler.delete(async (req, res) => {
     }
 
     const deletedProduct = await prisma.product.delete({
-      where: { id: +query.id },
+      where: { id: +query.id }
     })
     res.status(200).json({ success: true, deletedProduct })
   } catch (error) {
@@ -83,8 +84,10 @@ handler.delete(async (req, res) => {
 
 export const config = {
   api: {
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 }
 
-export default handler
+export default withSession(
+  withAuth(handler, { isProtected: true, roles: ['ADMIN'] })
+)
