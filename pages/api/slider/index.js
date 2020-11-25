@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import nc from 'next-connect'
 import cors from 'cors'
 import withSession, { withAuth } from '@/lib/withSession'
+import { CONSTANTS } from '@/lib/constants'
 
 const prisma = new PrismaClient()
 const handler = nc().use(cors())
@@ -10,7 +11,7 @@ const handler = nc().use(cors())
 const uploadImage = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, 'public/static/product-images')
+      cb(null, CONSTANTS.sliderImagesPath)
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname)
@@ -18,27 +19,11 @@ const uploadImage = multer({
   })
 })
 
-export const getProducts = async () => {
-  const products = await prisma.product.findMany({
-    include: { category: true }
-  })
-
-  return products
-}
-
 handler.get(async (req, res) => {
-  const { query } = req
-
   try {
-    if (query?.search) {
-      const searchProducts = await prisma.product.findMany({
-        where: { title: { contains: query.search, mode: 'insensitive' } }
-      })
+    const sliders = await prisma.slider.findMany()
 
-      return res.status(200).json(searchProducts)
-    }
-
-    res.status(200).json(getProducts())
+    res.status(200).json(sliders)
   } catch (error) {
     res.status(400).send(error)
   }
@@ -48,20 +33,20 @@ handler.use(uploadImage.single('image')).post(async (req, res) => {
   const { body, file } = req
 
   try {
-    const product = await prisma.product.create({
+    const slider = await prisma.slider.create({
       data: {
-        title: body.title,
-        description: body.description,
-        image: file.filename,
-        category: {
-          connect: {
-            title: body.category
-          }
+        sliderItems: {
+          create: [
+            {
+              title: body.title,
+              description: body.description
+            }
+          ]
         }
       }
     })
 
-    res.status(200).json(product)
+    res.status(200).json(slider)
   } catch (error) {
     res.status(400).send(error)
   }

@@ -1,7 +1,7 @@
 import { withAuthServerSideProps } from '@/lib/withSession'
 
 const AdminPage = () => {
-  return <div></div>
+  return <div>Dupa</div>
 }
 
 export const getServerSideProps = withAuthServerSideProps({
