@@ -1,82 +1,52 @@
 import multer from 'multer'
-import { PrismaClient } from '@prisma/client'
 import nc from 'next-connect'
 import cors from 'cors'
-import fs from 'fs'
 import { CONSTANTS } from '@/lib/constants'
 import withSession, { withAuth } from '@/lib/withSession'
+import {
+  deleteProduct,
+  getProduct,
+  updateProduct,
+} from '@/lib/controllers/productsController'
 
-const prisma = new PrismaClient()
 const handler = nc().use(cors())
 
 const uploadImage = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, 'public/static/product-images')
+      cb(null, CONSTANTS.productImagesPath)
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname)
-    }
-  })
+    },
+  }),
 })
 
 handler.get(async (req, res) => {
+  const { query } = req
   try {
-    const product = await prisma.product.findOne({
-      where: { id: +req.query.id }
-    })
-
-    res.status(200).json(product)
+    const product = await getProduct(query)
+    return res.status(200).json(product)
   } catch (error) {
-    res.status(400).send(error)
+    res.status(400).send({ success: false, error })
   }
 })
 
 handler.use(uploadImage.single('image')).put(async (req, res) => {
   const { body, file, query } = req
-
   try {
-    const product = await prisma.product.update({
-      where: { id: +query.id },
-      data: {
-        title: body.title,
-        description: body.description,
-        image: file.filename,
-        category: {
-          connect: {
-            title: body.category
-          }
-        }
-      }
-    })
-
-    res.status(200).json(product)
+    const updatedProduct = await updateProduct(query, body, file)
+    res.status(200).json(updatedProduct)
   } catch (error) {
-    res.status(400).send(error)
+    res.status(400).send({ success: false, error })
   }
 })
 
 handler.delete(async (req, res) => {
   const { query } = req
-
   try {
-    const product = await prisma.product.findOne({ where: { id: +query.id } })
-
-    if (product?.image) {
-      fs.unlinkSync(
-        `${CONSTANTS.productImagesPath}/${product.image}`,
-        (error) => {
-          if (error) {
-            return res.status(400).send({ success: false, error })
-          }
-        }
-      )
-    }
-
-    const deletedProduct = await prisma.product.delete({
-      where: { id: +query.id }
-    })
-    res.status(200).json({ success: true, deletedProduct })
+    const deletedProduct = await deleteProduct(query)
+    res.status(200).json(deletedProduct)
   } catch (error) {
     res.status(400).send({ success: false, error })
   }
@@ -84,8 +54,8 @@ handler.delete(async (req, res) => {
 
 export const config = {
   api: {
-    bodyParser: false
-  }
+    bodyParser: false,
+  },
 }
 
 export default withSession(

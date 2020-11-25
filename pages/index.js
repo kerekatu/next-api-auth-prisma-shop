@@ -4,14 +4,20 @@ import { handleLogout } from '@/lib/api'
 import { withAuthServerSideProps } from '@/lib/withSession'
 import Layout from '@/components/containers/layout'
 import Slider from '@/components/slider'
-import { getProducts } from './api/products'
+import { getProducts } from '@/lib/controllers/productsController'
+import { getCategories } from '@/lib/controllers/categoriesController'
+import { getSlider } from '@/lib/controllers/sliderController'
 
 const HomePage = ({ user, data }) => {
   const router = useRouter()
+  const { products, categories, slider } = data
+
+  console.log()
 
   return (
-    <Layout>
-      <Slider />
+    <Layout pageTitle="Homepage">
+      <Slider items={slider.data.sliderItems} />
+      <div id="products"></div>
     </Layout>
     // <div>
     //   {user?.isLoggedIn ? (
@@ -32,7 +38,13 @@ const HomePage = ({ user, data }) => {
 }
 
 export const getServerSideProps = withAuthServerSideProps({
-  callback: getProducts()
+  callback: async () => {
+    return {
+      products: await getProducts(),
+      categories: await getCategories(),
+      slider: await getSlider({ id: '2' }),
+    }
+  },
 })
 
 export default HomePage

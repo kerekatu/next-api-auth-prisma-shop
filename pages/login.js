@@ -7,6 +7,7 @@ import { handleLogin } from '@/lib/api'
 import styled from '@emotion/styled'
 import Form from '@/components/common/form'
 import FormField from '@/components/common/form/form-field'
+import Layout from '@/components/containers/layout'
 
 const LoginPage = ({ user }) => {
   const router = useRouter()
@@ -24,41 +25,53 @@ const LoginPage = ({ user }) => {
   }, [router, user])
 
   return (
-    <LoginWrapper>
-      <Form
-        submitText="Login"
-        cancelButton={{ text: 'Go Back', callback: () => router.replace('/') }}
-        error={formErrors?.errors?.responseError}
-        onSubmit={handleSubmit}
-      >
-        <FormField
-          label="Username"
-          name="username"
-          value={formValues.username}
-          error={formErrors?.errors?.username}
-          onChange={handleChange}
-        />
-        <FormField
-          type="password"
-          label="Password"
-          name="password"
-          value={formValues.password}
-          error={formErrors?.errors?.password}
-          onChange={handleChange}
-        />
-      </Form>
-    </LoginWrapper>
+    <Layout>
+      <LoginWrapper>
+        <div className="form-container">
+          <Form
+            submitText="Login"
+            cancelButton={{
+              text: 'Go Back',
+              callback: () => router.replace('/'),
+            }}
+            error={formErrors?.errors?.responseError}
+            onSubmit={handleSubmit}
+          >
+            <FormField
+              label="Username"
+              name="username"
+              value={formValues.username}
+              error={formErrors?.errors?.username}
+              onChange={handleChange}
+            />
+            <FormField
+              type="password"
+              label="Password"
+              name="password"
+              value={formValues.password}
+              error={formErrors?.errors?.password}
+              onChange={handleChange}
+            />
+          </Form>
+        </div>
+      </LoginWrapper>
+    </Layout>
   )
 }
 
-const LoginWrapper = styled.main`
-  margin: 0 auto;
-  width: 46rem;
-  background-color: #f6f6f6;
-  border-radius: 0.4rem;
-  padding: 2rem;
+const LoginWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  form {
+    background-color: var(--color-gray);
+    width: 48rem;
+    border-radius: 0.4rem;
+    padding: 3rem;
+  }
 `
 
-export const getServerSideProps = withAuthServerSideProps()
+export const getServerSideProps = withAuthServerSideProps({})
 
 export default LoginPage

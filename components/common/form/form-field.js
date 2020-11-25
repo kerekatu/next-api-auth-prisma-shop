@@ -27,7 +27,7 @@ const FormField = ({
 }
 
 const FieldWrapper = styled.div`
-  width: inherit;
+  width: 100%;
 
   & + & {
     margin-top: 2rem;
