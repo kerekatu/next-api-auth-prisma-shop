@@ -2,6 +2,7 @@ import { CONSTANTS } from '@/lib/constants'
 import { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
 import Heading from './common/heading'
+import { mq } from '@/styles/global'
 
 const Slider = ({ items, interval }) => {
   const [currentItem, setCurrentItem] = useState(0)
@@ -44,6 +45,10 @@ const Slider = ({ items, interval }) => {
 const SliderWrapper = styled.div`
   height: calc(100vh - 10rem);
 
+  ${mq[0]} {
+    height: 52rem;
+  }
+
   li {
     display: block;
     position: relative;
@@ -56,6 +61,10 @@ const SliderWrapper = styled.div`
     width: 100%;
     user-select: none;
     pointer-events: none;
+
+    ${mq[0]} {
+      height: 52rem;
+    }
   }
 
   .slider-content {
@@ -69,6 +78,11 @@ const SliderWrapper = styled.div`
     min-width: 60rem;
     padding: 4rem;
     text-align: center;
+
+    ${mq[0]} {
+      min-width: auto;
+      width: 100%;
+    }
   }
 
   .slider-content > p {

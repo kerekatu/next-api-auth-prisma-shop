@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
+import { mq } from '@/styles/global'
 
 const Footer = () => {
   return (
@@ -67,12 +68,22 @@ const FooterWrapper = styled.footer`
     align-items: center;
     height: 25rem;
     background-color: var(--color-gray);
+
+    ${mq[1]} {
+      height: max-content;
+      padding: 6rem;
+    }
   }
 
   .footer-top > .container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
+
+    ${mq[1]} {
+      gap: 4rem;
+      grid-template-columns: 1fr;
+    }
   }
 
   .footer-top h2 {

@@ -1,5 +1,9 @@
 import { css } from '@emotion/react'
 
+export const mq = [37.5, 50, 62.5].map(
+  (bp) => `@media only screen and (max-width: ${bp}em)`
+)
+
 const globalStyles = css`
   :root {
     --color-black: #000;
@@ -7,6 +11,8 @@ const globalStyles = css`
     --color-gray: #414141;
     --color-white: #fff;
     --color-white-rgb: 255, 255, 255;
+    --color-red: #ff482b;
+    --color-blue: #0366d6;
 
     --font: 'Lato', sans-serif;
     --font-size: 1.6rem;
@@ -32,6 +38,10 @@ const globalStyles = css`
     box-sizing: border-box;
     font-size: 62.5%;
     background-color: var(--color-black);
+
+    ${mq[2]} {
+      font-size: 50%;
+    }
   }
 
   body {
@@ -85,6 +95,10 @@ const globalStyles = css`
   .container {
     width: var(--page-width);
     margin: 0 auto;
+
+    ${mq[2]} {
+      width: 100%;
+    }
   }
 `
 

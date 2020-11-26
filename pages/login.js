@@ -8,6 +8,7 @@ import styled from '@emotion/styled'
 import Form from '@/components/common/form'
 import FormField from '@/components/common/form/form-field'
 import Layout from '@/components/containers/layout'
+import { mq } from '@/styles/global'
 
 const LoginPage = ({ user }) => {
   const router = useRouter()
@@ -25,35 +26,33 @@ const LoginPage = ({ user }) => {
   }, [router, user])
 
   return (
-    <Layout>
+    <Layout pageTitle="Login">
       <LoginWrapper>
-        <div className="form-container">
-          <Form
-            submitText="Login"
-            cancelButton={{
-              text: 'Go Back',
-              callback: () => router.replace('/'),
-            }}
-            error={formErrors?.errors?.responseError}
-            onSubmit={handleSubmit}
-          >
-            <FormField
-              label="Username"
-              name="username"
-              value={formValues.username}
-              error={formErrors?.errors?.username}
-              onChange={handleChange}
-            />
-            <FormField
-              type="password"
-              label="Password"
-              name="password"
-              value={formValues.password}
-              error={formErrors?.errors?.password}
-              onChange={handleChange}
-            />
-          </Form>
-        </div>
+        <Form
+          submitText="Login"
+          cancelButton={{
+            text: 'Go Back',
+            callback: () => router.replace('/'),
+          }}
+          error={formErrors?.errors?.responseError}
+          onSubmit={handleSubmit}
+        >
+          <FormField
+            label="Username"
+            name="username"
+            value={formValues.username}
+            error={formErrors?.errors?.username}
+            onChange={handleChange}
+          />
+          <FormField
+            type="password"
+            label="Password"
+            name="password"
+            value={formValues.password}
+            error={formErrors?.errors?.password}
+            onChange={handleChange}
+          />
+        </Form>
       </LoginWrapper>
     </Layout>
   )
@@ -64,11 +63,19 @@ const LoginWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
+  ${mq[0]} {
+    padding: 2rem;
+  }
+
   form {
     background-color: var(--color-gray);
     width: 48rem;
     border-radius: 0.4rem;
     padding: 3rem;
+
+    ${mq[0]} {
+      width: 100%;
+    }
   }
 `
 

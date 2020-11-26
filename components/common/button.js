@@ -11,7 +11,7 @@ const Button = ({ className, type = 'button', children, ...props }) => {
 const ButtonWrapper = styled.button`
   &.primary {
     border: 0.2rem solid var(--color-white);
-    border-radius: 0.4rem;
+    border-radius: var(--border-radius);
     background-color: var(--color-gray);
     padding: 1.6rem 3rem;
     font-weight: 700;
@@ -25,11 +25,38 @@ const ButtonWrapper = styled.button`
 
   &.secondary {
     border: none;
-    border-radius: 0.4rem;
-    background-color: #ff482b;
+    border-radius: var(--border-radius);
+    background-color: var(--color-red);
     padding: 1rem 2rem;
     font-weight: 700;
     color: #fff;
+  }
+
+  &.tertiary {
+    border: 0.1rem solid var(--color-white);
+    border-radius: var(--border-radius);
+    background-color: transparent;
+    padding: 1rem 2rem;
+    color: var(--color-white);
+    transition: opacity 0.2s ease-in-out;
+
+    &.active {
+      color: black;
+      background-color: var(--color-white);
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+
+  &.transparent {
+    border: none;
+    background-color: transparent;
   }
 `
 

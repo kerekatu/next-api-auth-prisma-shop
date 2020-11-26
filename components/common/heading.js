@@ -17,6 +17,7 @@ const HeadingWrapper = styled.h1`
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   margin-bottom: 3rem;
 
   .line {
