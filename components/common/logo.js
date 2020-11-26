@@ -27,7 +27,7 @@ const LogoWrapper = styled.div`
   }
 
   a > div {
-    font-size: var(--font-size-2);
+    font-size: var(--font-size-3);
     font-weight: 700;
     text-transform: uppercase;
   }

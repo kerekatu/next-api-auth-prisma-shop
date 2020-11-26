@@ -6,12 +6,8 @@ const Navbar = () => {
     <NavbarWrapper>
       <ul>
         {CONSTANTS.navbarItems.map((item, index) => (
-          <a
-            href={`#${item.toLowerCase().replace(' ', '-')}`}
-            key={index}
-            title={item}
-          >
-            <li>{item}</li>
+          <a href={`#${item.slug}`} key={index} title={item.text}>
+            <li>{item.text}</li>
           </a>
         ))}
       </ul>

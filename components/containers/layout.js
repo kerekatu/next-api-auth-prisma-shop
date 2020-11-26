@@ -15,7 +15,7 @@ const Layout = ({ pageTitle = '', children }) => {
       </Head>
       <Header />
       <main>{children}</main>
-      {/* <Footer /> */}
+      <Footer />
     </LayoutWrapper>
   )
 }
@@ -29,6 +29,7 @@ const LayoutWrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr min(var(--page-width), 100%) 1fr;
     min-height: calc(100vh - 10rem);
+    margin-bottom: 8rem;
   }
 
   main > * {

@@ -10,12 +10,12 @@ const handler = nc().use(cors())
 const uploadImage = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, CONSTANTS.sliderImagesPath)
+      cb(null, `public/${CONSTANTS.sliderImagesPath}`)
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname)
-    },
-  }),
+    }
+  })
 })
 
 handler.get(async (req, res) => {
@@ -40,8 +40,8 @@ handler.use(uploadImage.single('image')).post(async (req, res) => {
 
 export const config = {
   api: {
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 }
 
 export default withSession(

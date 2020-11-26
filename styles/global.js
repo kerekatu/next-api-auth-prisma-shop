@@ -3,16 +3,21 @@ import { css } from '@emotion/react'
 const globalStyles = css`
   :root {
     --color-black: #000;
+    --color-black-rgb: 0, 0, 0;
     --color-gray: #414141;
     --color-white: #fff;
+    --color-white-rgb: 255, 255, 255;
 
     --font: 'Lato', sans-serif;
-    --font-size: 1.4rem;
-    --font-size-2: 2.5rem;
+    --font-size: 1.6rem;
+    --font-size-2: 1.8rem;
+    --font-size-3: 2.4rem;
+    --font-size-4: 4.2rem;
     --line-height: 1.58;
     --line-height-2: 1.2;
 
     --page-width: 92rem;
+    --border-radius: 0.4rem;
   }
 
   *,
@@ -59,6 +64,18 @@ const globalStyles = css`
   a {
     color: currentColor;
     text-decoration: none;
+  }
+
+  h1 {
+    font-size: var(--font-size-4);
+  }
+
+  h2 {
+    font-size: var(--font-size-3);
+  }
+
+  h3 {
+    font-size: var(--font-size-2);
   }
 
   .error {

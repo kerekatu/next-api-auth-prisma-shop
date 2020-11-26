@@ -12,15 +12,28 @@ const FormField = ({
   return (
     <FieldWrapper>
       <label htmlFor={name}>{label}</label>
-      <input
-        type={type}
-        id={name}
-        name={name}
-        value={value}
-        className={`${error && 'input-error'}`}
-        onChange={(e) => onChange(e)}
-        {...props}
-      />
+      {type === 'textarea' ? (
+        <textarea
+          type={type}
+          id={name}
+          name={name}
+          value={value}
+          className={`${error && 'input-error'}`}
+          onChange={(e) => onChange(e)}
+          {...props}
+        ></textarea>
+      ) : (
+        <input
+          type={type}
+          id={name}
+          name={name}
+          value={value}
+          className={`${error && 'input-error'}`}
+          onChange={(e) => onChange(e)}
+          {...props}
+        />
+      )}
+
       {error && <div className="error">{error}</div>}
     </FieldWrapper>
   )
@@ -35,19 +48,37 @@ const FieldWrapper = styled.div`
 
   label {
     display: block;
+    font-size: 1.8rem;
+    color: rgba(var(--color-white-rgb), 0.6);
   }
 
-  input {
+  input,
+  textarea {
     width: inherit;
-    border: 0.1rem solid #ddd;
-    border-radius: 0.4rem;
+    border: none;
+    border-bottom: 0.1rem solid rgba(var(--color-white-rgb), 0.6);
+    color: var(--color-white);
     padding: 0 1rem;
+    background-color: transparent;
     height: 4.2rem;
     margin-top: 0.4rem;
+
+    &:focus {
+      border-bottom: 0.1rem solid rgba(var(--color-white-rgb), 1);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 20rem;
   }
 
   .input-error {
-    border: 0.1rem solid red;
+    border-bottom: 0.1rem solid red;
+
+    &:focus {
+      border-bottom: 0.1rem solid red;
+    }
   }
 `
 

@@ -5,7 +5,7 @@ import { CONSTANTS } from '@/lib/constants'
 import withSession, { withAuth } from '@/lib/withSession'
 import {
   deleteCategory,
-  getCategory,
+  getCategory
 } from '@/lib/controllers/categoriesController'
 
 const handler = nc().use(cors())
@@ -13,12 +13,12 @@ const handler = nc().use(cors())
 const uploadImage = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, CONSTANTS.categoryImagesPath)
+      cb(null, `public/${CONSTANTS.categoryImagesPath}`)
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname)
-    },
-  }),
+    }
+  })
 })
 
 handler.get(async (req, res) => {
@@ -57,8 +57,8 @@ handler.delete(async (req, res) => {
 
 export const config = {
   api: {
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 }
 
 export default withSession(

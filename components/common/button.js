@@ -10,12 +10,17 @@ const Button = ({ className, type = 'button', children, ...props }) => {
 
 const ButtonWrapper = styled.button`
   &.primary {
-    border: none;
+    border: 0.2rem solid var(--color-white);
     border-radius: 0.4rem;
-    background-color: #3b97fc;
-    padding: 1rem 2rem;
+    background-color: var(--color-gray);
+    padding: 1.6rem 3rem;
     font-weight: 700;
     color: #fff;
+    transition: opacity 0.2s ease-in-out;
+
+    &:hover {
+      opacity: 0.6;
+    }
   }
 
   &.secondary {

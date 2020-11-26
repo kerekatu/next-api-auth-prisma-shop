@@ -9,7 +9,7 @@ import {
   deleteSlider,
   deleteSliderItem,
   getSlider,
-  updateSliderItem,
+  updateSliderItem
 } from '@/lib/controllers/sliderController'
 
 const handler = nc().use(cors())
@@ -17,12 +17,12 @@ const handler = nc().use(cors())
 const uploadImage = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, CONSTANTS.sliderImagesPath)
+      cb(null, `public/${CONSTANTS.sliderImagesPath}`)
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname)
-    },
-  }),
+    }
+  })
 })
 
 handler.get(async (req, res) => {
@@ -74,8 +74,8 @@ handler.delete(async (req, res) => {
 
 export const config = {
   api: {
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 }
 
 export default withSession(
