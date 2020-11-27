@@ -1,6 +1,12 @@
 import Button from '@/components/common/button'
 import Layout from '@/components/containers/layout'
-import { handleLogout } from '@/lib/api'
+import {
+  handleLogout,
+  handleUpdate,
+  handlePostMulti,
+  handleDelete,
+  handleUpdateMulti
+} from '@/lib/api'
 import { getAbout } from '@/lib/controllers/aboutController'
 import { getProducts } from '@/lib/controllers/productsController'
 import { getSliders } from '@/lib/controllers/sliderController'
@@ -9,25 +15,32 @@ import styled from '@emotion/styled'
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import FormModal from '@/components/form-modal'
 
 export const getServerSideProps = withAuthServerSideProps({
   options: {
     isProtected: true,
-    roles: ['ADMIN'],
+    roles: ['ADMIN']
   },
   callback: async () => {
     return {
       products: await getProducts(),
       sliders: await getSliders(),
-      about: await getAbout(),
+      about: await getAbout()
     }
-  },
+  }
 })
 
+// TODO: add client-side validation and code abstraction
+
 const AdminPage = ({ user, data }) => {
+  const router = useRouter()
   const [currentTab, setCurrentTab] = useState('products')
   const [properties, setProperties] = useState([])
-  const router = useRouter()
+  const [showModal, setShowModal] = useState(false)
+  const [modalStatus, setModalStatus] = useState({ status: null, message: '' })
+  const [formAction, setFormAction] = useState({})
+  const [initialValues, setInitialValues] = useState({})
 
   useEffect(() => {
     const getProperties = data[currentTab]?.data.map((item) => {
@@ -36,6 +49,42 @@ const AdminPage = ({ user, data }) => {
 
     setProperties(getProperties[0])
   }, [currentTab, data])
+
+  const handleModalForm = (values) => {
+    if (formAction.method === 'add') {
+      return handleAdd(values, formAction.action)
+    } else if (formAction.method === 'edit') {
+      return handleEdit(values, formAction.action, initialValues)
+    } else if (formAction.method === 'delete') {
+      return handleDeleteOne(formAction.action, values, initialValues)
+    }
+  }
+
+  const handleAdd = async (values, action) => {
+    if (action === 'productsAdd') {
+      const { title, description, image } = values
+      const data = await handlePostMulti('/api/products/', {
+        title,
+        description,
+        image
+      })
+      setModalStatus(data)
+    }
+  }
+
+  const handleEdit = async (values, action, query) => {
+    if (action === 'aboutEdit') {
+      return handleUpdate(`/api/about`, values)
+    } else if (action === 'productsEdit') {
+      return handleUpdateMulti(`/api/products/${query}`, values)
+    }
+  }
+
+  const handleDeleteOne = async (values, action, query) => {
+    if (action === 'productsDelete') {
+      return handleDelete(`/api/products/${query}`, values)
+    }
+  }
 
   return (
     <Layout pageTitle="Admin Panel">
@@ -68,17 +117,44 @@ const AdminPage = ({ user, data }) => {
           {data[currentTab]?.data.map((item) => (
             <li key={item.id}>
               <div className="actions">
-                <Button className="transparent">
+                <Button
+                  className="transparent"
+                  onClick={() => {
+                    setShowModal(true)
+                    setFormAction({ action: `${currentTab}Add`, method: 'add' })
+                    setInitialValues(item)
+                  }}
+                >
                   <i className="actions-add">
                     <Icon icon="plus" />
                   </i>
                 </Button>
-                <Button className="transparent">
+                <Button
+                  className="transparent"
+                  onClick={() => {
+                    setShowModal(true)
+                    setFormAction({
+                      action: `${currentTab}Edit`,
+                      method: 'edit'
+                    })
+                    setInitialValues(item.id)
+                  }}
+                >
                   <i className="actions-edit">
                     <Icon icon="edit" />
                   </i>
                 </Button>
-                <Button className="transparent">
+                <Button
+                  className="transparent"
+                  onClick={() => {
+                    setModalStatus(true)
+                    setFormAction({
+                      action: `${currentTab}Delete`,
+                      method: 'delete'
+                    })
+                    setInitialValues(item.id)
+                  }}
+                >
                   <i className="actions-delete">
                     <Icon icon="trash" />
                   </i>
@@ -97,6 +173,14 @@ const AdminPage = ({ user, data }) => {
             </li>
           ))}
         </ul>
+        <FormModal
+          setShowModal={setShowModal}
+          modalStatus={modalStatus}
+          showModal={showModal}
+          handleModalForm={handleModalForm}
+          action={formAction.action}
+          initialValues={initialValues}
+        />
       </AdminWrapper>
     </Layout>
   )
@@ -159,8 +243,10 @@ const AdminWrapper = styled.section`
     li {
       display: flex;
       gap: 4rem;
-      padding: 2rem;
+      align-items: center;
+      padding: 0 2rem;
       background-color: #444;
+      height: 8rem;
 
       &:nth-child(even) {
         background-color: #555;

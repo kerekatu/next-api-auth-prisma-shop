@@ -15,11 +15,11 @@ handler.get(async (req, res) => {
 })
 
 handler.put(async (req, res) => {
-  const { body, query } = req
+  const { body } = req
 
   try {
-    const about = await updateAbout(body, query)
-    res.status(200).send({ sucess: true, about })
+    const about = await updateAbout(body)
+    res.status(200).send(about)
   } catch (error) {
     res.status(400).send({ success: false, error })
   }

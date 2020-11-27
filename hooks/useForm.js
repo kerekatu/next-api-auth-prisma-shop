@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-const useForm = (callback, initialValues = {}, validationSchema) => {
+const useForm = (
+  callback,
+  initialValues = {},
+  validationSchema,
+  redirect = false
+) => {
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({ errors: {}, isValid: false })
   const router = useRouter()
@@ -13,13 +18,15 @@ const useForm = (callback, initialValues = {}, validationSchema) => {
       if (!response.success) {
         return setFormErrors({
           errors: { responseError: response?.message },
-          isValid: false,
+          isValid: false
         })
       }
 
-      router.replace('/')
+      if (redirect) return router.replace('/')
+
+      return response
     })
-  }, [callback, formErrors, formValues, router])
+  }, [callback, formErrors, formValues, router, redirect])
 
   const validateForm = async () => {
     return await validationSchema
@@ -40,17 +47,21 @@ const useForm = (callback, initialValues = {}, validationSchema) => {
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
+
+    console.log(formValues)
   }
 
   const handleSubmit = () => {
-    validateForm()
+    if (validationSchema !== null) return validateForm()
+
+    setFormErrors({ errors: {}, isValid: true })
   }
 
   return {
     formErrors,
     handleChange,
     handleSubmit,
-    formValues,
+    formValues
   }
 }
 
